@@ -3,14 +3,19 @@
 MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 
     userManager = new UserManager();
-	DrawLoginPage();
+	DrawLoginWindow();
+}
+
+void MainFrame::ClearLoginPageInputs(){
+	username->Clear();
+	password->Clear();
 }
 
 void MainFrame::ClearPanel() {
     panel->DestroyChildren();
 }
 
-void MainFrame::DrawLoginPage(){
+void MainFrame::DrawLoginWindow(){
 	wxFont headlineFont(wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
 
 	//place items
@@ -33,21 +38,22 @@ void MainFrame::DrawLoginPage(){
 
 
 	//setup sizers
-
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	mainSizer->Add(loginHeadlineText, wxSizerFlags().CenterHorizontal());
 
 	mainSizer->AddSpacer(15);
 
-	wxBoxSizer* usernameSizer = new wxBoxSizer(wxHORIZONTAL);
-	usernameSizer->Add(usernameText, wxSizerFlags().CenterVertical());;
+	wxBoxSizer* usernameSizer = new wxBoxSizer(wxVERTICAL);
+	usernameSizer->Add(usernameText, wxSizerFlags().Align(wxALIGN_LEFT));
+	usernameSizer->AddSpacer(4);
 	usernameSizer->Add(username, wxSizerFlags().CenterHorizontal());
 	mainSizer->Add(usernameSizer, wxSizerFlags().CenterHorizontal());
 
 	mainSizer->AddSpacer(15);
 
-	wxBoxSizer* passwordSizer = new wxBoxSizer(wxHORIZONTAL);
-	passwordSizer->Add(passwordText, wxSizerFlags().CenterVertical());;
+	wxBoxSizer* passwordSizer = new wxBoxSizer(wxVERTICAL);
+	passwordSizer->Add(passwordText, wxSizerFlags().Align(wxALIGN_LEFT));
+	passwordSizer->AddSpacer(4);
 	passwordSizer->Add(password, wxSizerFlags().CenterHorizontal());
 	mainSizer->Add(passwordSizer, wxSizerFlags().CenterHorizontal());
 
@@ -69,6 +75,12 @@ void MainFrame::DrawLoginPage(){
 	registerButton->Bind(wxEVT_BUTTON, &MainFrame::OnRegisterButtonClicked, this);
 	//binding buttons
 
+	// Pobranie rozmiaru okna
+	wxSize size = this->GetSize();
+	int minWidth = size.GetWidth() + size.GetWidth() * 0.25;
+	int minHeight = size.GetHeight() + size.GetHeight() * 0.1;
+
+	this->SetMinSize(wxSize(minWidth, minHeight));
 }
 
 void MainFrame::OnLoginButtonClicked(wxCommandEvent& evt){
@@ -78,12 +90,12 @@ void MainFrame::OnLoginButtonClicked(wxCommandEvent& evt){
 	User* user = userManager->loginUser(usrName.ToStdString(), pwd.ToStdString());
 	if (user == nullptr) {
 		wxMessageBox("B³êdna nazwa u¿ytkownika lub has³o.", "B³¹d logowania", wxOK | wxICON_ERROR);
-		password->Clear();
+		ClearLoginPageInputs();
 		return;
 	}
 
 	wxMessageBox("Zalogowano pomyœlnie!", "Sukces", wxOK | wxICON_INFORMATION);
-
+	DrawMainWindow();
 	//TODO: logged-in user
 
 	delete user;
@@ -94,6 +106,7 @@ void MainFrame::OnRegisterButtonClicked(wxCommandEvent& evt){
 	wxString pwd = password->GetValue();
 
 	RegistrationStatus status = userManager->registerUser(usrName.ToStdString(), pwd.ToStdString());
+
 	RegistrationStatusLog(status);
 }
 
@@ -105,14 +118,21 @@ void MainFrame::RegistrationStatusLog(RegistrationStatus status){
 		break;
 	case RegistrationStatus::UsernameAlreadyExists:
 		wxMessageBox("U¿ytkownik o podanym loginie istnieje!", "B³¹d rejestracji", wxOK | wxICON_ERROR);
+		ClearLoginPageInputs();
 		break;
 	case RegistrationStatus::EmptyUsernameOrPassword:
 		wxMessageBox("Login lub ha³o nie mo¿e byæ puste!", "B³¹d rejestracji", wxOK | wxICON_ERROR);
+		ClearLoginPageInputs();
 		break;
 	case RegistrationStatus::DatabaseError:
 		wxMessageBox("B³¹d bazy danych!", "B³¹d rejestracji", wxOK | wxICON_ERROR);
+		ClearLoginPageInputs();
 		break;
 	default:
 		break;
 	}
+}
+
+void MainFrame::DrawMainWindow(){
+
 }

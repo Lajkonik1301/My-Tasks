@@ -7,14 +7,6 @@ class MainFrame : public wxFrame {
 public:
 	MainFrame(const wxString& title);
 private:
-	void ClearPanel();
-
-	void DrawLoginPage();
-	void OnLoginButtonClicked(wxCommandEvent& evt);
-	void OnRegisterButtonClicked(wxCommandEvent& evt);
-	void RegistrationStatusLog(RegistrationStatus status);
-
-	void DrawMainPage();
 
 	wxPanel* panel;
 	wxStaticText* loginHeadlineText;
@@ -26,4 +18,14 @@ private:
 	wxButton* registerButton;
 
 	UserManager* userManager;
+
+	void ClearLoginPageInputs();
+	void ClearPanel();
+
+	void DrawLoginWindow();
+	void OnLoginButtonClicked(wxCommandEvent& evt);
+	void OnRegisterButtonClicked(wxCommandEvent& evt);
+	void RegistrationStatusLog(RegistrationStatus status);
+
+	void DrawMainWindow();
 };
