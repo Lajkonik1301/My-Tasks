@@ -134,6 +134,9 @@
       <AdditionalLibraryDirectories>C:\wxWidgets\wxWidgets-3.2.6\lib\vc_x64_lib;C:\Users\wikto\Documents\!STUDIA\part 3\cpp\projekt\My-Tasks\My-Tasks\sqlite3-lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -153,6 +156,9 @@
       <AdditionalLibraryDirectories>C:\wxWidgets\wxWidgets-3.2.6\lib\vc_x64_lib;C:\Users\wikto\Documents\!STUDIA\part 3\cpp\projekt\My-Tasks\My-Tasks\sqlite3-lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />

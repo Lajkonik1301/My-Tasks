@@ -62,9 +62,12 @@ void MainFrame::DrawLoginPage(){
 
 	panel->SetSizer(outerSizer);
 	outerSizer->SetSizeHints(this);
-
 	//setup sizers
 
+	//binding buttons
+	loginButton->Bind(wxEVT_BUTTON, &MainFrame::OnLoginButtonClicked, this);
+	registerButton->Bind(wxEVT_BUTTON, &MainFrame::OnRegisterButtonClicked, this);
+	//binding buttons
 
 }
 
