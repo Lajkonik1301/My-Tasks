@@ -134,6 +134,9 @@
       <AdditionalLibraryDirectories>C:\wxWidgets\wxWidgets-3.2.6\lib\vc_x64_lib;C:\Users\wikto\Documents\!STUDIA\part 3\cpp\projekt\My-Tasks\My-Tasks\sqlite3-lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -153,20 +156,19 @@
       <AdditionalLibraryDirectories>C:\wxWidgets\wxWidgets-3.2.6\lib\vc_x64_lib;C:\Users\wikto\Documents\!STUDIA\part 3\cpp\projekt\My-Tasks\My-Tasks\sqlite3-lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
-    <ClInclude Include="LoginPage.h" />
     <ClInclude Include="MainFrame.h" />
-    <ClInclude Include="MainPage.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="UserManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="LoginPage.cpp" />
     <ClCompile Include="MainFrame.cpp" />
-    <ClCompile Include="MainPage.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="UserManager.cpp" />
   </ItemGroup>

@@ -24,12 +24,6 @@
     <ClInclude Include="UserManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LoginPage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MainPage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MainFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,12 +36,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UserManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LoginPage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MainPage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MainFrame.cpp">
