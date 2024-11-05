@@ -6,9 +6,9 @@
 
 class MainFrame;
 
-class LoginPage : public wxPanel {
+class LoginWindow : public wxPanel {
 public:
-	LoginPage(MainFrame* mainFrame);
+	LoginWindow(MainFrame* mainFrame);
 private:
 	MainFrame* mainFrame;
 	UserManager* userManager;

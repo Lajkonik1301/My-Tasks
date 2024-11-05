@@ -1,7 +1,6 @@
-#include "LoginPage.h"
-#include "MainFrame.h"
+#include "LoginWindow.h"
 
-LoginPage::LoginPage(MainFrame* mainFrame){
+LoginWindow::LoginWindow(MainFrame* mainFrame){
 
 	userManager = new UserManager();
 
@@ -60,8 +59,8 @@ LoginPage::LoginPage(MainFrame* mainFrame){
 	//setup sizers
 
 	//binding buttons
-	loginButton->Bind(wxEVT_BUTTON, &LoginPage::OnLoginButtonClicked, this);
-	registerButton->Bind(wxEVT_BUTTON, &LoginPage::OnRegisterButtonClicked, this);
+	loginButton->Bind(wxEVT_BUTTON, &LoginWindow::OnLoginButtonClicked, this);
+	registerButton->Bind(wxEVT_BUTTON, &LoginWindow::OnRegisterButtonClicked, this);
 	//binding buttons
 
 	//window min-size setup
@@ -72,16 +71,16 @@ LoginPage::LoginPage(MainFrame* mainFrame){
 	mainFrame->SetMinSize(wxSize(minWidth, minHeight));
 }
 
-void LoginPage::ClearLoginPageInputs(){
+void LoginWindow::ClearLoginPageInputs(){
 	username->Clear();
 	password->Clear();
 }
 
-void LoginPage::ClearPanel(){
+void LoginWindow::ClearPanel(){
 	panel->DestroyChildren();
 }
 
-void LoginPage::OnLoginButtonClicked(wxCommandEvent& evt){
+void LoginWindow::OnLoginButtonClicked(wxCommandEvent& evt){
 	wxString usrName = username->GetValue();
 	wxString pwd = password->GetValue();
 
@@ -94,12 +93,14 @@ void LoginPage::OnLoginButtonClicked(wxCommandEvent& evt){
 
 	wxMessageBox("Zalogowano pomyœlnie!", "Sukces", wxOK | wxICON_INFORMATION);
 
+	mainFrame->SetLoggedInUser(user->getId(), user->getUsername());
+
 	//TODO: logged-in user
 
 	delete user;
 }
 
-void LoginPage::OnRegisterButtonClicked(wxCommandEvent& evt){
+void LoginWindow::OnRegisterButtonClicked(wxCommandEvent& evt){
 	wxString usrName = username->GetValue();
 	wxString pwd = password->GetValue();
 
@@ -108,7 +109,7 @@ void LoginPage::OnRegisterButtonClicked(wxCommandEvent& evt){
 	RegistrationStatusLog(status);
 }
 
-void LoginPage::RegistrationStatusLog(RegistrationStatus status){
+void LoginWindow::RegistrationStatusLog(RegistrationStatus status){
 	switch (status)
 	{
 	case RegistrationStatus::Success:

@@ -2,15 +2,20 @@
 #include <wx/wx.h>
 #include "UserManager.h"
 #include "User.h"
-#include "LoginPage.h"
+#include "LoginWindow.h"
+#include "App.h"
 
-class LoginPage;
+class LoginWindow;
 
 class MainFrame : public wxFrame {
 public:
 	MainFrame(const wxString& title);
+	void SetLoggedInUser(int userId, std::string username);
 private:
-	LoginPage* loginPageInstance;
+	LoginWindow* loginWindowInstance;
 
-	void DrawLoginPage();
+	int loggedInUserId;
+	std::string loggedInUsername;
+
+	void DrawLoginWindow();
 };
