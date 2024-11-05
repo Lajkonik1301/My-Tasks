@@ -1,6 +1,7 @@
 #include "LoginWindow.h"
 
 LoginWindow::LoginWindow(MainFrame* mainFrame){
+	this->mainFrame = mainFrame;
 
 	userManager = new UserManager();
 
@@ -74,10 +75,6 @@ LoginWindow::LoginWindow(MainFrame* mainFrame){
 void LoginWindow::ClearLoginPageInputs(){
 	username->Clear();
 	password->Clear();
-}
-
-void LoginWindow::ClearPanel(){
-	panel->DestroyChildren();
 }
 
 void LoginWindow::OnLoginButtonClicked(wxCommandEvent& evt){

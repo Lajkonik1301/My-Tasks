@@ -1,5 +1,5 @@
 #pragma once
-#include<wx/wx.h>
+#include <wx/wx.h>
 #include "MainFrame.h"
 #include "UserManager.h"
 #include "User.h"
@@ -28,7 +28,6 @@ private:
 	wxGridSizer* outerSizer;
 
 	void ClearLoginPageInputs();
-	void ClearPanel();
 
 	void OnLoginButtonClicked(wxCommandEvent& evt);
 	void OnRegisterButtonClicked(wxCommandEvent& evt);
