@@ -2,30 +2,20 @@
 #include <wx/wx.h>
 #include "UserManager.h"
 #include "User.h"
+#include "LoginWindow.h"
+#include "App.h"
+
+class LoginWindow;
 
 class MainFrame : public wxFrame {
 public:
 	MainFrame(const wxString& title);
+	void SetLoggedInUser(int userId, std::string username);
 private:
+	LoginWindow* loginWindowInstance;
 
-	wxPanel* panel;
-	wxStaticText* loginHeadlineText;
-	wxStaticText* usernameText;
-	wxStaticText* passwordText;
-	wxTextCtrl* username;
-	wxTextCtrl* password;
-	wxButton* loginButton;
-	wxButton* registerButton;
-
-	UserManager* userManager;
-
-	void ClearLoginPageInputs();
-	void ClearPanel();
+	int loggedInUserId;
+	std::string loggedInUsername;
 
 	void DrawLoginWindow();
-	void OnLoginButtonClicked(wxCommandEvent& evt);
-	void OnRegisterButtonClicked(wxCommandEvent& evt);
-	void RegistrationStatusLog(RegistrationStatus status);
-
-	void DrawMainWindow();
 };
