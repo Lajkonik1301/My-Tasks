@@ -1,7 +1,8 @@
 #include "MainAppWindow.h"
 
-MainAppWindow::MainAppWindow(MainFrame* mainFrame) {
+MainAppWindow::MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseManager) {
 	this->mainFrame = mainFrame;
+	this->databaseManager = new DatabaseManager();
 	
 	panel = new wxPanel(mainFrame);
 

@@ -1,7 +1,6 @@
 #pragma once
 #include <wx/wx.h>
-#include "UserManager.h"
-#include "User.h"
+#include "DatabaseManager.h"
 #include "LoginWindow.h"
 #include "MainAppWindow.h"
 #include "App.h"
@@ -16,6 +15,8 @@ public:
 private:
 	LoginWindow* loginWindowInstance;
 	MainAppWindow* mainAppWindowInstance;
+
+	DatabaseManager* databaseManager;
 
 	int loggedInUserId;
 	std::string loggedInUsername;

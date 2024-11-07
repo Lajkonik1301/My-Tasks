@@ -2,11 +2,13 @@
 
 MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 
-	//DrawLoginWindow();
+	databaseManager = new DatabaseManager();
+
+	DrawLoginWindow();
 
 	//for test purposes, REMOVE LATER
-	ClearMainFrame();
-	DrawMainAppWindow();
+	//ClearMainFrame();
+	//DrawMainAppWindow();
 	//!!
 }
 
@@ -16,19 +18,16 @@ void MainFrame::ClearMainFrame(){
 }
 
 void MainFrame::DrawLoginWindow(){
-	loginWindowInstance = new LoginWindow(this);
+	loginWindowInstance = new LoginWindow(this, databaseManager);
 }
 
 void MainFrame::DrawMainAppWindow(){
-	mainAppWindowInstance = new MainAppWindow(this);
+	mainAppWindowInstance = new MainAppWindow(this, databaseManager);
 }
 
 void MainFrame::SetLoggedInUser(int userId, std::string username){
 	loggedInUserId = userId;
 	loggedInUsername = username;
-
-	wxString loggedInUserMessage = wxString::Format("ID zalogowanego u¿ytkownika: %d", loggedInUserId);
-	wxMessageBox(loggedInUserMessage);
 
 	ClearMainFrame();
 	DrawMainAppWindow();

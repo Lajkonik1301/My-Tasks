@@ -1,14 +1,16 @@
 #pragma once
 #include <wx/wx.h>
 #include "MainFrame.h"
+#include "DatabaseManager.h"
 
 class MainFrame;
 
 class MainAppWindow{
 public:
-	MainAppWindow(MainFrame* mainFrame);
+	MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseManager);
 private:
 	MainFrame* mainFrame;
+	DatabaseManager* databaseManager;
 
 	wxPanel* panel;
 
