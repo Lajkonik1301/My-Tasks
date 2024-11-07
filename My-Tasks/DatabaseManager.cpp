@@ -132,3 +132,7 @@ User* DatabaseManager::loginUser(const std::string & username, const std::string
 
 	return new User(userId, username, hashedPassword);
 }
+
+bool DatabaseManager::addNewTask(){
+	return false;
+}

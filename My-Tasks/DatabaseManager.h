@@ -34,5 +34,6 @@ private:
 public:
     RegistrationStatus registerUser(const std::string& username, const std::string& password);
     User* loginUser(const std::string& username, const std::string& password);
+    bool addNewTask();
 };
 
