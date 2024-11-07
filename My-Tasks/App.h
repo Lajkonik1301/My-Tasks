@@ -1,6 +1,6 @@
 #pragma once
 #include "MainFrame.h"
-#include "UserManager.h"
+#include "DatabaseManager.h"
 #include <wx/wx.h>
 
 class App : public wxApp {

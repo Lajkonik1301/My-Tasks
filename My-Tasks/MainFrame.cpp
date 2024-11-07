@@ -2,17 +2,33 @@
 
 MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 
+	databaseManager = new DatabaseManager();
+
 	DrawLoginWindow();
 
-	
-	
+	//for test purposes, REMOVE LATER
+	//ClearMainFrame();
+	//DrawMainAppWindow();
+	//!!
+}
+
+void MainFrame::ClearMainFrame(){
+	//clearing all MainFrame children in order to place new items
+	this->DestroyChildren();
 }
 
 void MainFrame::DrawLoginWindow(){
-	loginWindowInstance = new LoginWindow(this);
+	loginWindowInstance = new LoginWindow(this, databaseManager);
+}
+
+void MainFrame::DrawMainAppWindow(){
+	mainAppWindowInstance = new MainAppWindow(this, databaseManager);
 }
 
 void MainFrame::SetLoggedInUser(int userId, std::string username){
 	loggedInUserId = userId;
 	loggedInUsername = username;
+
+	ClearMainFrame();
+	DrawMainAppWindow();
 }

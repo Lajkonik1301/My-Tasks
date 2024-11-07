@@ -1,17 +1,17 @@
 #pragma once
-#include<wx/wx.h>
+#include <wx/wx.h>
 #include "MainFrame.h"
-#include "UserManager.h"
+#include "DatabaseManager.h"
 #include "User.h"
 
 class MainFrame;
 
 class LoginWindow : public wxPanel {
 public:
-	LoginWindow(MainFrame* mainFrame);
+	LoginWindow(MainFrame* mainFrame, DatabaseManager* databaseManager);
 private:
 	MainFrame* mainFrame;
-	UserManager* userManager;
+	DatabaseManager* databaseManager;
 
 	wxPanel* panel;
 	wxStaticText* loginHeadlineText;
@@ -28,7 +28,6 @@ private:
 	wxGridSizer* outerSizer;
 
 	void ClearLoginPageInputs();
-	void ClearPanel();
 
 	void OnLoginButtonClicked(wxCommandEvent& evt);
 	void OnRegisterButtonClicked(wxCommandEvent& evt);

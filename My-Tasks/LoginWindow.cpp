@@ -1,8 +1,8 @@
 #include "LoginWindow.h"
 
-LoginWindow::LoginWindow(MainFrame* mainFrame){
-
-	userManager = new UserManager();
+LoginWindow::LoginWindow(MainFrame* mainFrame, DatabaseManager* databaseManager){
+	this->mainFrame = mainFrame;
+	this->databaseManager = databaseManager;
 
 	wxFont headlianeFont(wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
 
@@ -76,22 +76,16 @@ void LoginWindow::ClearLoginPageInputs(){
 	password->Clear();
 }
 
-void LoginWindow::ClearPanel(){
-	panel->DestroyChildren();
-}
-
 void LoginWindow::OnLoginButtonClicked(wxCommandEvent& evt){
 	wxString usrName = username->GetValue();
 	wxString pwd = password->GetValue();
 
-	User* user = userManager->loginUser(usrName.ToStdString(), pwd.ToStdString());
+	User* user = databaseManager->loginUser(usrName.ToStdString(), pwd.ToStdString());
 	if (user == nullptr) {
 		wxMessageBox("B³êdna nazwa u¿ytkownika lub has³o.", "B³¹d logowania", wxOK | wxICON_ERROR);
 		ClearLoginPageInputs();
 		return;
 	}
-
-	wxMessageBox("Zalogowano pomyœlnie!", "Sukces", wxOK | wxICON_INFORMATION);
 
 	mainFrame->SetLoggedInUser(user->getId(), user->getUsername());
 
@@ -104,7 +98,7 @@ void LoginWindow::OnRegisterButtonClicked(wxCommandEvent& evt){
 	wxString usrName = username->GetValue();
 	wxString pwd = password->GetValue();
 
-	RegistrationStatus status = userManager->registerUser(usrName.ToStdString(), pwd.ToStdString());
+	RegistrationStatus status = databaseManager->registerUser(usrName.ToStdString(), pwd.ToStdString());
 
 	RegistrationStatusLog(status);
 }
