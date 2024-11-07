@@ -38,28 +38,28 @@ void DatabaseManager::createUsersTable(){
 
 void DatabaseManager::createTaskTable(){
 	const char* createTableQuery =
-		"CREATE TABLE IF NO EXISTS tasks ("
+		"CREATE TABLE IF NOT EXISTS tasks ("
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, "
-		"user-id INTEGER, "
-		"category-id INTEGER, "
+		"user_id INTEGER, "
+		"category_id INTEGER, "
 		"name TEXT,"
 		"description TEXT,"
 		"priority INTEGER,"
 		"status INTEGER,"
-		"FOREIGN KEY (user-id) REFERENCES users(id),"
-		"FOREIGN KEY(category-id) REFERENCES categories(id));";
+		"FOREIGN KEY (user_id) REFERENCES users(id),"
+		"FOREIGN KEY(category_id) REFERENCES categories(id));";
 	sqlite3_exec(db, createTableQuery, nullptr, nullptr, nullptr);
 }
 
 void DatabaseManager::createCategoriesTable(){
 	const char* createTableQuery =
-		"CREATE TABLE IF NO EXISTS categories ("
+		"CREATE TABLE IF NOT EXISTS categories ("
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, "
-		"user-id INTEGER, "
-		"task-id INTEGER, "
+		"user_id INTEGER, "
+		"task_id INTEGER, "
 		"name TEXT,"
-		"FOREIGN KEY (user-id) REFERENCES users(id),"
-		"FOREIGN KEY(task-id) REFERENCES tasks(id));";
+		"FOREIGN KEY (user_id) REFERENCES users(id),"
+		"FOREIGN KEY(task_id) REFERENCES tasks(id));";
 	sqlite3_exec(db, createTableQuery, nullptr, nullptr, nullptr);
 }
 
@@ -131,4 +131,8 @@ User* DatabaseManager::loginUser(const std::string & username, const std::string
 	sqlite3_finalize(stmt);
 
 	return new User(userId, username, hashedPassword);
+}
+
+bool DatabaseManager::addNewTask(){
+	return false;
 }
