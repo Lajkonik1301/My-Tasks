@@ -33,7 +33,17 @@ void DatabaseManager::createUsersTable(){
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, "
 		"username TEXT UNIQUE, "
 		"passwordHash TEXT);";
-	sqlite3_exec(db, createTableQuery, nullptr, nullptr, nullptr);
+
+	sqlite3_stmt* stmt;
+	int result = sqlite3_prepare_v2(db, createTableQuery, -1, &stmt, nullptr);
+
+	if (result != SQLITE_OK) {
+		return;
+	}
+
+	result = sqlite3_step(stmt);
+
+	sqlite3_finalize(stmt);
 }
 
 void DatabaseManager::createTaskTable(){
@@ -48,7 +58,17 @@ void DatabaseManager::createTaskTable(){
 		"status INTEGER,"
 		"FOREIGN KEY (user_id) REFERENCES users(id),"
 		"FOREIGN KEY(category_id) REFERENCES categories(id));";
-	sqlite3_exec(db, createTableQuery, nullptr, nullptr, nullptr);
+
+	sqlite3_stmt* stmt;
+	int result = sqlite3_prepare_v2(db, createTableQuery, -1, &stmt, nullptr);
+
+	if (result != SQLITE_OK) {
+		return;
+	}
+
+	result = sqlite3_step(stmt);
+
+	sqlite3_finalize(stmt);
 }
 
 void DatabaseManager::createCategoriesTable(){
@@ -56,11 +76,19 @@ void DatabaseManager::createCategoriesTable(){
 		"CREATE TABLE IF NOT EXISTS categories ("
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, "
 		"user_id INTEGER, "
-		"task_id INTEGER, "
 		"name TEXT,"
-		"FOREIGN KEY (user_id) REFERENCES users(id),"
-		"FOREIGN KEY(task_id) REFERENCES tasks(id));";
-	sqlite3_exec(db, createTableQuery, nullptr, nullptr, nullptr);
+		"FOREIGN KEY (user_id) REFERENCES users(id));";
+
+	sqlite3_stmt* stmt;
+	int result = sqlite3_prepare_v2(db, createTableQuery, -1, &stmt, nullptr);
+
+	if (result != SQLITE_OK) {
+		return;
+	}
+
+	result = sqlite3_step(stmt);
+
+	sqlite3_finalize(stmt);
 }
 
 std::string DatabaseManager::hashPassword(const std::string& password){
@@ -133,6 +161,34 @@ User* DatabaseManager::loginUser(const std::string & username, const std::string
 	return new User(userId, username, hashedPassword);
 }
 
-bool DatabaseManager::addNewTask(){
-	return false;
+std::string DatabaseManager::addNewTask(int userId, int categoryId, std::string name, std::string description, int priority){
+	//data already validated
+
+	std::string query = "INSERT INTO tasks (user_id, category_id, name, description, priority, status) VALUES(?, ?, ?, ?, ?, ?);";
+	sqlite3_stmt* stmt;
+	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK) {
+		return sqlite3_errmsg(db);
+	}
+
+	sqlite3_bind_int(stmt, 1, userId);
+	sqlite3_bind_int(stmt, 2, categoryId);
+	sqlite3_bind_text(stmt, 3, name.c_str(), -1, SQLITE_STATIC);
+	sqlite3_bind_text(stmt, 4, description.c_str(), -1, SQLITE_STATIC);
+	sqlite3_bind_int(stmt, 5, priority);
+	sqlite3_bind_int(stmt, 6, 0);
+
+	int result = sqlite3_step(stmt);
+	if (result != SQLITE_DONE) {
+		return sqlite3_errmsg(db);
+	}
+
+	sqlite3_finalize(stmt);
+	
+	if (result == SQLITE_DONE)
+		return "sukces";
+
+	return "b³¹d";
+
+	//DATABASE IS LOCKED ERROR!
 }

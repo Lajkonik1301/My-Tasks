@@ -2,14 +2,16 @@
 #include <wx/wx.h>
 #include "MainFrame.h"
 #include "DatabaseManager.h"
+#include "User.h"
 
 class MainFrame;
 
 class MainAppWindow{
 public:
-	MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseManager);
+	MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseManager, User* user);
 private:
 	MainFrame* mainFrame;
+	User* user;
 	DatabaseManager* databaseManager;
 
 	wxPanel* panel;

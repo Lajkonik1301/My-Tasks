@@ -12,6 +12,7 @@ public:
 private:
 	MainFrame* mainFrame;
 	DatabaseManager* databaseManager;
+	User* user;
 
 	wxPanel* panel;
 	wxStaticText* loginHeadlineText;
