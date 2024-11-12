@@ -80,18 +80,17 @@ void LoginWindow::OnLoginButtonClicked(wxCommandEvent& evt){
 	wxString usrName = username->GetValue();
 	wxString pwd = password->GetValue();
 
-	User* user = databaseManager->loginUser(usrName.ToStdString(), pwd.ToStdString());
+	user = databaseManager->loginUser(usrName.ToStdString(), pwd.ToStdString());
 	if (user == nullptr) {
 		wxMessageBox("B³êdna nazwa u¿ytkownika lub has³o.", "B³¹d logowania", wxOK | wxICON_ERROR);
 		ClearLoginPageInputs();
 		return;
 	}
-
-	mainFrame->SetLoggedInUser(user->getId(), user->getUsername());
+	mainFrame->ContinueAfterLogin(user);
 
 	//TODO: logged-in user
 
-	delete user;
+	//delete user;
 }
 
 void LoginWindow::OnRegisterButtonClicked(wxCommandEvent& evt){

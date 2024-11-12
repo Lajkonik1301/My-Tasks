@@ -4,6 +4,7 @@
 #include "LoginWindow.h"
 #include "MainAppWindow.h"
 #include "App.h"
+#include "User.h"
 
 class LoginWindow;
 class MainAppWindow;
@@ -11,10 +12,11 @@ class MainAppWindow;
 class MainFrame : public wxFrame {
 public:
 	MainFrame(const wxString& title);
-	void SetLoggedInUser(int userId, std::string username);
+	void ContinueAfterLogin(User* user);
 private:
 	LoginWindow* loginWindowInstance;
 	MainAppWindow* mainAppWindowInstance;
+	User* user;
 
 	DatabaseManager* databaseManager;
 

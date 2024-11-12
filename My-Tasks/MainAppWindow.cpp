@@ -1,9 +1,9 @@
 #include "MainAppWindow.h"
 
-MainAppWindow::MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseManager) {
+MainAppWindow::MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseManager, User* user) {
 	this->mainFrame = mainFrame;
+	this->user = user;
 	this->databaseManager = new DatabaseManager();
-	
 	panel = new wxPanel(mainFrame);
 
 	//place items
@@ -101,7 +101,9 @@ void MainAppWindow::BindButtons(){
 }
 
 void MainAppWindow::onAddNewTaskButtonClicked(wxCommandEvent& evt){
-
+	//addTaskWindowInstance = new addTaskWindow(mainFrame, databaseManager, user->getId());
+	std::string kod = databaseManager->addNewTask(1, 1, "Testowy task", "Opis testowego taska", 2);
+	wxMessageBox(kod);
 }
 
 void MainAppWindow::onModifyTaskButtonClicked(wxCommandEvent& evt){

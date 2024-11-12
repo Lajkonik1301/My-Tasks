@@ -22,13 +22,11 @@ void MainFrame::DrawLoginWindow(){
 }
 
 void MainFrame::DrawMainAppWindow(){
-	mainAppWindowInstance = new MainAppWindow(this, databaseManager);
+	mainAppWindowInstance = new MainAppWindow(this, databaseManager, user);
 }
 
-void MainFrame::SetLoggedInUser(int userId, std::string username){
-	loggedInUserId = userId;
-	loggedInUsername = username;
-
+void MainFrame::ContinueAfterLogin(User* user){
+	this->user = user;
 	ClearMainFrame();
 	DrawMainAppWindow();
 }
