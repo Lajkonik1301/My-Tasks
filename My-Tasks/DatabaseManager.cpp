@@ -1,8 +1,10 @@
 #include "DatabaseManager.h"
 
+//'DATABASE IS LOCKED' error occures whilst
+//the DB file is opened whilst the program is running
+
 DatabaseManager::DatabaseManager(){
 	bool databaseConnection = openDatabase();
-
 	if (databaseConnection) {
 		createUsersTable();
 		createTaskTable();
@@ -20,6 +22,7 @@ bool DatabaseManager::openDatabase(){
 		std::cerr << "Blad otwarcia bazy danych: " << sqlite3_errmsg(db) << std::endl;
 		return false;
 	}
+	sqlite3_exec(db, "PRAGMA encoding = 'UTF-8';", nullptr, nullptr, nullptr);
 	return true;
 }
 
@@ -34,16 +37,7 @@ void DatabaseManager::createUsersTable(){
 		"username TEXT UNIQUE, "
 		"passwordHash TEXT);";
 
-	sqlite3_stmt* stmt;
-	int result = sqlite3_prepare_v2(db, createTableQuery, -1, &stmt, nullptr);
-
-	if (result != SQLITE_OK) {
-		return;
-	}
-
-	result = sqlite3_step(stmt);
-
-	sqlite3_finalize(stmt);
+	sqlite3_exec(db, createTableQuery, nullptr, nullptr, nullptr);
 }
 
 void DatabaseManager::createTaskTable(){
@@ -59,16 +53,7 @@ void DatabaseManager::createTaskTable(){
 		"FOREIGN KEY (user_id) REFERENCES users(id),"
 		"FOREIGN KEY(category_id) REFERENCES categories(id));";
 
-	sqlite3_stmt* stmt;
-	int result = sqlite3_prepare_v2(db, createTableQuery, -1, &stmt, nullptr);
-
-	if (result != SQLITE_OK) {
-		return;
-	}
-
-	result = sqlite3_step(stmt);
-
-	sqlite3_finalize(stmt);
+	sqlite3_exec(db, createTableQuery, nullptr, nullptr, nullptr);
 }
 
 void DatabaseManager::createCategoriesTable(){
@@ -76,19 +61,10 @@ void DatabaseManager::createCategoriesTable(){
 		"CREATE TABLE IF NOT EXISTS categories ("
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, "
 		"user_id INTEGER, "
-		"name TEXT,"
+		"nazwa TEXT,"
 		"FOREIGN KEY (user_id) REFERENCES users(id));";
 
-	sqlite3_stmt* stmt;
-	int result = sqlite3_prepare_v2(db, createTableQuery, -1, &stmt, nullptr);
-
-	if (result != SQLITE_OK) {
-		return;
-	}
-
-	result = sqlite3_step(stmt);
-
-	sqlite3_finalize(stmt);
+	sqlite3_exec(db, createTableQuery, nullptr, nullptr, nullptr);
 }
 
 std::string DatabaseManager::hashPassword(const std::string& password){
@@ -102,6 +78,20 @@ std::string DatabaseManager::hashPassword(const std::string& password){
 	ss << std::hex << hash;
 	return ss.str();
 }
+
+void DatabaseManager::createDefaultCat(int userId) {
+	std::string query = "INSERT INTO categories (user_id, nazwa) VALUES (?, ?);";
+	const char* def = "Domyslne";
+	sqlite3_stmt* stmt;
+	sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+
+	sqlite3_bind_int(stmt, 1, userId);
+	sqlite3_bind_text(stmt, 2, def, -1, SQLITE_STATIC);
+
+	sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+}
+
 
 RegistrationStatus DatabaseManager::registerUser(const std::string& username, const std::string& password){
 		if (username.empty() || password.empty())
@@ -117,12 +107,13 @@ RegistrationStatus DatabaseManager::registerUser(const std::string& username, co
 		int count = 0;
 		if (sqlite3_step(stmt) == SQLITE_ROW)
 			count = sqlite3_column_int(stmt, 0);
-
+		 
 		sqlite3_finalize(stmt);
 
 		if (count > 0)
 			return RegistrationStatus::UsernameAlreadyExists;
 
+		int newUserId = NULL;
 		query = "INSERT INTO users (username, passwordHash) VALUES (?, ?);";
 		sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
 		sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
@@ -132,7 +123,11 @@ RegistrationStatus DatabaseManager::registerUser(const std::string& username, co
 			sqlite3_finalize(stmt);
 			return RegistrationStatus::DatabaseError;
 		}
+
+		newUserId = static_cast<int>(sqlite3_last_insert_rowid(db));
 		sqlite3_finalize(stmt);
+
+		createDefaultCat(newUserId);
 
 		return RegistrationStatus::Success;
 }
@@ -189,6 +184,50 @@ std::string DatabaseManager::addNewTask(int userId, int categoryId, std::string 
 		return "sukces";
 
 	return "b³¹d";
-
-	//DATABASE IS LOCKED ERROR!
 }
+
+bool DatabaseManager::modifyTask(){
+
+	return false;
+}
+
+bool DatabaseManager::markAsDone(int taskId) {
+	std::string getStatusQuery = "SELECT status FROM tasks WHERE id = ?;";
+	sqlite3_stmt* stmt;
+	int rc = sqlite3_prepare_v2(db, getStatusQuery.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK) {
+		return false;
+	}
+
+	sqlite3_bind_int(stmt, 1, taskId);
+	int result = sqlite3_step(stmt);
+
+	if (result != SQLITE_ROW) {
+		sqlite3_finalize(stmt);
+		return false;
+	}
+
+	int currentStatus = sqlite3_column_int(stmt, 0);
+	sqlite3_finalize(stmt);
+
+	int newStatus = (currentStatus == 0) ? 1 : 0;
+
+	std::string updateQuery = "UPDATE tasks SET status = ? WHERE id = ?;";
+	rc = sqlite3_prepare_v2(db, updateQuery.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK) {
+		return sqlite3_errmsg(db);
+	}
+
+	sqlite3_bind_int(stmt, 1, newStatus);
+	sqlite3_bind_int(stmt, 2, taskId);
+
+	result = sqlite3_step(stmt);
+	if (result != SQLITE_DONE) {
+		sqlite3_finalize(stmt);
+		return false;
+	}
+
+	sqlite3_finalize(stmt);
+	return true;
+}
+
