@@ -5,6 +5,9 @@ MainAppWindow::MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseMana
 	this->user = user;
 	this->databaseManager = new DatabaseManager();
 	panel = new wxPanel(mainFrame);
+	choices = {};
+
+	populateListBox();
 
 	//place items
 	addNewTaskButton = new wxButton(panel, wxID_ANY, "Dodaj", wxDefaultPosition, wxSize(150, -1));
@@ -13,7 +16,7 @@ MainAppWindow::MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseMana
 	deleteTaskButton = new wxButton(panel, wxID_ANY, "Usuñ", wxDefaultPosition, wxSize(150, -1));;
 
 	taskListsHeadline = new wxStaticText(panel, wxID_ANY, "Listy zadañ");
-	taskListsContainer = new wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(150, -1));
+	taskListsContainer = new wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(150, -1), choices);
 
 	loggedInUserHeadline = new wxStaticText(panel, wxID_ANY, "Zalogowany u¿ytkownik:");
 	loggedInUsername = new wxStaticText(panel, wxID_ANY, "test-username");
@@ -98,6 +101,16 @@ void MainAppWindow::BindButtons(){
 
 	manageUserButton->Bind(wxEVT_BUTTON, &MainAppWindow::onManageUserButtonClicked, this);
 	logOutButton->Bind(wxEVT_BUTTON, &MainAppWindow::onLogOutButtonClicked, this);
+}
+
+void MainAppWindow::populateListBox() {
+	std::vector<std::string> categories;
+
+	databaseManager->getCategories(categories, user->getId());
+	
+	for (const auto& category : categories) {
+		choices.Add(wxString::FromUTF8(category));
+	}
 }
 
 void MainAppWindow::onAddNewTaskButtonClicked(wxCommandEvent& evt){

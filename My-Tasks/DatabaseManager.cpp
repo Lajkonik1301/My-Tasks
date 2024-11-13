@@ -61,7 +61,7 @@ void DatabaseManager::createCategoriesTable(){
 		"CREATE TABLE IF NOT EXISTS categories ("
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, "
 		"user_id INTEGER, "
-		"nazwa TEXT,"
+		"name TEXT,"
 		"FOREIGN KEY (user_id) REFERENCES users(id));";
 
 	sqlite3_exec(db, createTableQuery, nullptr, nullptr, nullptr);
@@ -80,7 +80,7 @@ std::string DatabaseManager::hashPassword(const std::string& password){
 }
 
 void DatabaseManager::createDefaultCat(int userId) {
-	std::string query = "INSERT INTO categories (user_id, nazwa) VALUES (?, ?);";
+	std::string query = "INSERT INTO categories (user_id, name) VALUES (?, ?);";
 	const char* def = "Domyslne";
 	sqlite3_stmt* stmt;
 	sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
@@ -154,6 +154,20 @@ User* DatabaseManager::loginUser(const std::string & username, const std::string
 	sqlite3_finalize(stmt);
 
 	return new User(userId, username, hashedPassword);
+}
+
+void DatabaseManager::getCategories(std::vector<std::string>& categories, int userId) {
+	sqlite3_stmt* stmt;
+	std::string query = "SELECT name FROM categories WHERE user_id = ?";
+
+	sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+	sqlite3_bind_int(stmt, 1, userId);
+
+	while (sqlite3_step(stmt) == SQLITE_ROW) {
+		const unsigned char* categoryName = sqlite3_column_text(stmt, 0);
+		categories.emplace_back(reinterpret_cast<const char*>(categoryName));
+	}
+	sqlite3_finalize(stmt);
 }
 
 std::string DatabaseManager::addNewTask(int userId, int categoryId, std::string name, std::string description, int priority){

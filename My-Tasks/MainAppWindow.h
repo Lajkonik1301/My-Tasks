@@ -1,5 +1,7 @@
 #pragma once
 #include <wx/wx.h>
+#include <vector>
+#include <string>
 #include "MainFrame.h"
 #include "DatabaseManager.h"
 #include "User.h"
@@ -21,6 +23,7 @@ private:
 	wxButton* markAsDoneButton;
 	wxButton* deleteTaskButton;
 
+	wxArrayString choices;
 	wxStaticText* taskListsHeadline;
 	wxListBox* taskListsContainer;
 
@@ -45,6 +48,7 @@ private:
 	wxGridSizer* outerSizer;
 
 	void BindButtons();
+	void populateListBox();
 
 	void onAddNewTaskButtonClicked(wxCommandEvent& evt);
 	void onModifyTaskButtonClicked(wxCommandEvent& evt);
@@ -55,4 +59,3 @@ private:
 	void onLogOutButtonClicked(wxCommandEvent& evt);
 
 };
-
