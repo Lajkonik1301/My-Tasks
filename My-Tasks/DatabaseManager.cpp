@@ -170,6 +170,20 @@ void DatabaseManager::getCategories(std::vector<std::string>& categories, int us
 	sqlite3_finalize(stmt);
 }
 
+void DatabaseManager::getTasks(std::vector<std::string>& tasks, int userId){
+	sqlite3_stmt* stmt;
+	std::string query = "SELECT name FROM tasks WHERE user_id = ?";
+
+	sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+	sqlite3_bind_int(stmt, 1, userId);
+
+	while (sqlite3_step(stmt) == SQLITE_ROW) {
+		const unsigned char* taskName = sqlite3_column_text(stmt, 0);
+		tasks.emplace_back(reinterpret_cast<const char*>(taskName));
+	}
+	sqlite3_finalize(stmt);
+}
+
 std::string DatabaseManager::addNewTask(int userId, int categoryId, std::string name, std::string description, int priority){
 	//data already validated
 
@@ -243,5 +257,18 @@ bool DatabaseManager::markAsDone(int taskId) {
 
 	sqlite3_finalize(stmt);
 	return true;
+}
+
+void DatabaseManager::deleteTask(std::string taskName){
+	std::string query = "DELETE FROM tasks WHERE name = ?;";
+	sqlite3_stmt* stmt;
+
+	sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+
+	sqlite3_bind_text(stmt, 1, taskName.c_str(), -1, SQLITE_STATIC);
+
+	sqlite3_step(stmt);
+
+	sqlite3_finalize(stmt);
 }
 

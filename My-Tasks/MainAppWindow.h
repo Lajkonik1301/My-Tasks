@@ -23,7 +23,7 @@ private:
 	wxButton* markAsDoneButton;
 	wxButton* deleteTaskButton;
 
-	wxArrayString choices;
+	wxArrayString categoriesChoices;
 	wxStaticText* taskListsHeadline;
 	wxListBox* taskListsContainer;
 
@@ -33,6 +33,7 @@ private:
 	wxButton* manageUserButton;
 	wxButton* logOutButton;
 
+	wxArrayString tasksChoices;
 	wxStaticText* tasksHeadline;
 	wxListBox* tasksContainer;
 
@@ -48,7 +49,8 @@ private:
 	wxGridSizer* outerSizer;
 
 	void BindButtons();
-	void populateListBox();
+	void populateCategoriesContainer();
+	void populateTasksContainer();
 
 	void onAddNewTaskButtonClicked(wxCommandEvent& evt);
 	void onModifyTaskButtonClicked(wxCommandEvent& evt);

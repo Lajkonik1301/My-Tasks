@@ -87,10 +87,6 @@ void LoginWindow::OnLoginButtonClicked(wxCommandEvent& evt){
 		return;
 	}
 	mainFrame->ContinueAfterLogin(user);
-
-	//TODO: logged-in user
-
-	//delete user;
 }
 
 void LoginWindow::OnRegisterButtonClicked(wxCommandEvent& evt){

@@ -39,9 +39,11 @@ public:
     User* loginUser(const std::string& username, const std::string& password);
     
     void getCategories(std::vector<std::string>& categories, int userId);
+    void getTasks(std::vector<std::string>& tasks, int userId);
 
     std::string addNewTask(int userId, int categoryId, std::string name, std::string description, int priority);
     bool modifyTask();
     bool markAsDone(int taskId);
+    void deleteTask(std::string taskName);
 };
 

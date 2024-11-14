@@ -5,9 +5,11 @@ MainAppWindow::MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseMana
 	this->user = user;
 	this->databaseManager = new DatabaseManager();
 	panel = new wxPanel(mainFrame);
-	choices = {};
+	categoriesChoices = {};
+	tasksChoices = {};
 
-	populateListBox();
+	populateCategoriesContainer();
+	populateTasksContainer();
 
 	//place items
 	addNewTaskButton = new wxButton(panel, wxID_ANY, "Dodaj", wxDefaultPosition, wxSize(150, -1));
@@ -16,7 +18,7 @@ MainAppWindow::MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseMana
 	deleteTaskButton = new wxButton(panel, wxID_ANY, "Usuñ", wxDefaultPosition, wxSize(150, -1));;
 
 	taskListsHeadline = new wxStaticText(panel, wxID_ANY, "Listy zadañ");
-	taskListsContainer = new wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(150, -1), choices);
+	taskListsContainer = new wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(150, -1), categoriesChoices);
 
 	loggedInUserHeadline = new wxStaticText(panel, wxID_ANY, "Zalogowany u¿ytkownik:");
 	loggedInUsername = new wxStaticText(panel, wxID_ANY, "test-username");
@@ -25,7 +27,7 @@ MainAppWindow::MainAppWindow(MainFrame* mainFrame, DatabaseManager* databaseMana
 	logOutButton = new wxButton(panel, wxID_ANY, "Wyloguj siê", wxDefaultPosition, wxSize(100, -1));
 
 	tasksHeadline = new wxStaticText(panel, wxID_ANY, "Zadania:");
-	tasksContainer = new wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(400, 200));
+	tasksContainer = new wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(400, 200), tasksChoices);
 	//place items
 
 	//setup sizers
@@ -103,13 +105,23 @@ void MainAppWindow::BindButtons(){
 	logOutButton->Bind(wxEVT_BUTTON, &MainAppWindow::onLogOutButtonClicked, this);
 }
 
-void MainAppWindow::populateListBox() {
+void MainAppWindow::populateCategoriesContainer() {
 	std::vector<std::string> categories;
 
 	databaseManager->getCategories(categories, user->getId());
 	
 	for (const auto& category : categories) {
-		choices.Add(wxString::FromUTF8(category));
+		categoriesChoices.Add(wxString::FromUTF8(category));
+	}
+}
+
+void MainAppWindow::populateTasksContainer(){
+	std::vector<std::string> tasks;
+
+	databaseManager->getTasks(tasks, user->getId());
+
+	for (const auto& task : tasks) {
+		tasksChoices.Add(wxString::FromUTF8(task));
 	}
 }
 
@@ -124,11 +136,27 @@ void MainAppWindow::onModifyTaskButtonClicked(wxCommandEvent& evt){
 }
 
 void MainAppWindow::onMarkAsDoneButtonClicked(wxCommandEvent& evt){
-
+	databaseManager->markAsDone(1);
 }
 
 void MainAppWindow::onDeleteTaskButtonClicked(wxCommandEvent& evt){
+	int selected = tasksContainer->GetSelection();
+	if (selected == wxNOT_FOUND) {
+		wxMessageBox("Nie wybrano ¿adnego elementu.", "B³¹d", wxOK | wxICON_ERROR);
+		return;
+	}
 
+	wxString selectedTask = tasksContainer->GetString(selected);
+
+	int response = wxMessageBox("Czy na pewno chcesz usun¹æ '" + selectedTask + "'?",
+		"Potwierdzenie usuniêcia",
+		wxYES_NO | wxICON_QUESTION);
+
+	if (response == wxYES) {
+		tasksContainer->Delete(selected);
+		databaseManager->deleteTask(selectedTask.ToStdString());
+		wxMessageBox("Element zosta³ usuniêty.", "Sukces", wxOK | wxICON_INFORMATION);
+	}
 }
 
 void MainAppWindow::onManageUserButtonClicked(wxCommandEvent& evt){
@@ -136,5 +164,6 @@ void MainAppWindow::onManageUserButtonClicked(wxCommandEvent& evt){
 }
 
 void MainAppWindow::onLogOutButtonClicked(wxCommandEvent& evt){
-
+	delete user;
+	mainFrame->ContinueAfterLogOut();
 }

@@ -28,5 +28,12 @@ void MainFrame::DrawMainAppWindow(){
 void MainFrame::ContinueAfterLogin(User* user){
 	this->user = user;
 	ClearMainFrame();
+	delete loginWindowInstance;
 	DrawMainAppWindow();
+}
+
+void MainFrame::ContinueAfterLogOut() {
+	ClearMainFrame();
+	delete mainAppWindowInstance;
+	DrawLoginWindow();
 }

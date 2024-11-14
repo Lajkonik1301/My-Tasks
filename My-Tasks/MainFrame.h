@@ -13,6 +13,7 @@ class MainFrame : public wxFrame {
 public:
 	MainFrame(const wxString& title);
 	void ContinueAfterLogin(User* user);
+	void ContinueAfterLogOut();
 private:
 	LoginWindow* loginWindowInstance;
 	MainAppWindow* mainAppWindowInstance;
