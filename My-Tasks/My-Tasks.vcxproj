@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddTaskWindow.h" />
     <ClInclude Include="DatabaseManager.h" />
     <ClInclude Include="LoginWindow.h" />
     <ClInclude Include="MainWindow.h" />
@@ -26,6 +27,7 @@
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddTaskWindow.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="DatabaseManager.cpp" />
     <ClCompile Include="LoginWindow.cpp" />

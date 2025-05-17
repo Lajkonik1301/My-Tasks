@@ -22,15 +22,15 @@ LoginWindow::LoginWindow() : wxFrame(nullptr, wxID_ANY, "My Tasks", wxDefaultPos
     headlineText->SetFont(headlineFont);
 
     wxStaticText* usernameLabel = new wxStaticText(panel, wxID_ANY, "Login:");
-    wxTextCtrl* usernameCtrl = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(150, -1));
+    loginCtrl = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(150, -1));
 
     wxStaticText* passwordLabel = new wxStaticText(panel, wxID_ANY, "Hasło:");
-    wxTextCtrl* passwordCtrl = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(150, -1), wxTE_PASSWORD);
+    passCtrl = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(150, -1), wxTE_PASSWORD);
 
     wxButton* loginBtn = new wxButton(panel, ID_LOGIN, "Zaloguj się", wxDefaultPosition, wxSize(150, -1));
     wxButton* registerBtn = new wxButton(panel, ID_REGISTER, "Zarejestruj się", wxDefaultPosition, wxSize(150, -1));
 
-    usernameCtrl->SetFocus();
+    loginCtrl->SetFocus();
 
     // Układ
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
@@ -41,14 +41,14 @@ LoginWindow::LoginWindow() : wxFrame(nullptr, wxID_ANY, "My Tasks", wxDefaultPos
     wxBoxSizer* usernameSizer = new wxBoxSizer(wxVERTICAL);
     usernameSizer->Add(usernameLabel, wxSizerFlags().Align(wxALIGN_LEFT));
     usernameSizer->AddSpacer(4);
-    usernameSizer->Add(usernameCtrl, wxSizerFlags().CenterHorizontal());
+    usernameSizer->Add(loginCtrl, wxSizerFlags().CenterHorizontal());
     mainSizer->Add(usernameSizer, wxSizerFlags().CenterHorizontal());
     mainSizer->AddSpacer(15);
 
     wxBoxSizer* passwordSizer = new wxBoxSizer(wxVERTICAL);
     passwordSizer->Add(passwordLabel, wxSizerFlags().Align(wxALIGN_LEFT));
     passwordSizer->AddSpacer(4);
-    passwordSizer->Add(passwordCtrl, wxSizerFlags().CenterHorizontal());
+    passwordSizer->Add(passCtrl, wxSizerFlags().CenterHorizontal());
     mainSizer->Add(passwordSizer, wxSizerFlags().CenterHorizontal());
     mainSizer->AddSpacer(15);
 
