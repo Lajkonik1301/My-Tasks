@@ -114,15 +114,23 @@ void MainWindow::OnAdd(wxCommandEvent&) {
 
 void MainWindow::OnDelete(wxCommandEvent&) {
     int sel = taskList->GetSelection();
-    if (sel != wxNOT_FOUND) {
-        DatabaseManager::GetInstance().DeleteTask(currentUser, sel);
-        RefreshTasks();
+    if (sel == wxNOT_FOUND) {
+        wxMessageBox("Najpierw wybierz zadanie do usunięcia.", "Brak wyboru", wxOK | wxICON_WARNING);
+        return;
     }
+
+    DatabaseManager::GetInstance().DeleteTask(currentUser, sel);
+    taskName->SetLabel("Nazwa:");
+    taskDescription->SetLabel("Opis:");
+    RefreshTasks();
 }
 
 void MainWindow::OnMarkDone(wxCommandEvent&) {
     int sel = taskList->GetSelection();
-    if (sel == wxNOT_FOUND) return;
+    if (sel == wxNOT_FOUND) {
+        wxMessageBox("Najpierw wybierz zadanie do zmiany statusu.", "Brak wyboru", wxOK | wxICON_WARNING);
+        return;
+    }
 
     auto allTasks = DatabaseManager::GetInstance().GetTasks(currentUser);
     int filter = statusFilter->GetSelection(); // 0: niewykonane, 1: wykonane
@@ -145,7 +153,27 @@ void MainWindow::OnMarkDone(wxCommandEvent&) {
 }
 
 void MainWindow::OnModify(wxCommandEvent&) {
-    wxMessageBox("Opcja modyfikacji nie została jeszcze zaimplementowana.", "Informacja");
+    int sel = taskList->GetSelection();
+    if (sel == wxNOT_FOUND) {
+        wxMessageBox("Najpierw wybierz zadanie do modyfikacji.", "Brak wyboru", wxOK | wxICON_WARNING);
+        return;
+    }
+
+    auto allTasks = DatabaseManager::GetInstance().GetTasks(currentUser);
+    int filter = statusFilter->GetSelection();
+    int filteredIndex = 0;
+
+    for (int i = 0; i < (int)allTasks.size(); ++i) {
+        if ((int)allTasks[i].isDone() == filter) {
+            if (filteredIndex == sel) {
+                const auto& task = allTasks[i];
+                AddTaskWindow* editWin = new AddTaskWindow(this, currentUser, i, task.getName(), task.getDescription());
+                editWin->Show();
+                break;
+            }
+            filteredIndex++;
+        }
+    }
 }
 
 void MainWindow::OnLogout(wxCommandEvent&) {

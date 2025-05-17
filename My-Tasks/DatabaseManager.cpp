@@ -142,3 +142,20 @@ void DatabaseManager::UpdateTaskStatus(const std::string& login, int index, int 
     sqlite3_close(db);
 }
 
+void DatabaseManager::UpdateTask(const std::string& login, int index, const std::string& name, const std::string& description) {
+    auto tasks = GetTasks(login);
+    if (index < 0 || index >= (int)tasks.size()) return;
+    int id = tasks[index].getId();
+    sqlite3* db;
+    sqlite3_open(dbPath.c_str(), &db);
+    sqlite3_stmt* stmt;
+    const char* sql = "UPDATE tasks SET name = ?, description = ? WHERE id = ?;";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+    sqlite3_bind_text(stmt, 1, name.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, description.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 3, id);
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+}
+

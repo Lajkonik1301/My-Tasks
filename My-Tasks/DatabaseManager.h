@@ -15,6 +15,7 @@ public:
     void DeleteTask(const std::string& login, int index);
     void MarkTaskDone(const std::string& login, int index);
     void UpdateTaskStatus(const std::string& login, int index, int status);
+    void UpdateTask(const std::string& login, int index, const std::string& name, const std::string& description);
 
     std::vector<Task> GetTasks(const std::string& login);
 
