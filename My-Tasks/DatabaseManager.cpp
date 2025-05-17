@@ -52,6 +52,55 @@ bool DatabaseManager::ValidateUser(const std::string& login, const std::string& 
     return valid;
 }
 
+bool DatabaseManager::UpdatePassword(const std::string& login, const std::string& newPassword) {
+    sqlite3* db;
+    sqlite3_open(dbPath.c_str(), &db);
+    sqlite3_stmt* stmt;
+    const char* sql = "UPDATE users SET password = ? WHERE login = ?;";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+    sqlite3_bind_text(stmt, 1, newPassword.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, login.c_str(), -1, SQLITE_STATIC);
+    bool success = sqlite3_step(stmt) == SQLITE_DONE;
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return success;
+}
+
+bool DatabaseManager::DeleteUser(const std::string& login) {
+    sqlite3* db;
+    sqlite3_open(dbPath.c_str(), &db);
+    sqlite3_stmt* stmt;
+    const char* getIdSQL = "SELECT id FROM users WHERE login = ?;";
+    sqlite3_prepare_v2(db, getIdSQL, -1, &stmt, nullptr);
+    sqlite3_bind_text(stmt, 1, login.c_str(), -1, SQLITE_STATIC);
+    int userId = -1;
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        userId = sqlite3_column_int(stmt, 0);
+    }
+    sqlite3_finalize(stmt);
+
+    if (userId == -1) {
+        sqlite3_close(db);
+        return false;
+    }
+
+    // Usuń zadania powiązane z użytkownikiem
+    const char* deleteTasksSQL = "DELETE FROM tasks WHERE user_id = ?;";
+    sqlite3_prepare_v2(db, deleteTasksSQL, -1, &stmt, nullptr);
+    sqlite3_bind_int(stmt, 1, userId);
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    // Usuń użytkownika
+    const char* deleteUserSQL = "DELETE FROM users WHERE id = ?;";
+    sqlite3_prepare_v2(db, deleteUserSQL, -1, &stmt, nullptr);
+    sqlite3_bind_int(stmt, 1, userId);
+    bool success = sqlite3_step(stmt) == SQLITE_DONE;
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return success;
+}
+
 void DatabaseManager::AddTask(const std::string& login, const std::string& name, const std::string& description) {
     sqlite3* db;
     sqlite3_open(dbPath.c_str(), &db);

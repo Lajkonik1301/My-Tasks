@@ -1,6 +1,7 @@
 ﻿#include "MainWindow.h"
-#include "AddTaskWindow.h"
 #include "LoginWindow.h"
+#include "AddTaskWindow.h"
+#include "ManageUserWindow.h"
 #include "DatabaseManager.h"
 
 enum {
@@ -95,7 +96,6 @@ MainWindow::MainWindow(const std::string& user) : wxFrame(nullptr, wxID_ANY, "My
     RefreshTasks();
 }
 
-
 void MainWindow::RefreshTasks() {
     taskList->Clear();
     auto tasks = DatabaseManager::GetInstance().GetTasks(currentUser);
@@ -183,7 +183,8 @@ void MainWindow::OnLogout(wxCommandEvent&) {
 }
 
 void MainWindow::OnManage(wxCommandEvent&) {
-    wxMessageBox("Opcja zarządzania użytkownikiem nie została jeszcze zaimplementowana.", "Informacja");
+    ManageUserWindow* manageWin = new ManageUserWindow(this, currentUser);
+    manageWin->Show();
 }
 
 void MainWindow::OnFilterChanged(wxCommandEvent&) {
@@ -196,7 +197,6 @@ void MainWindow::OnFilterChanged(wxCommandEvent&) {
     }
     RefreshTasks();
 }
-
 
 void MainWindow::OnTaskSelected(wxCommandEvent&) {
     int sel = taskList->GetSelection();

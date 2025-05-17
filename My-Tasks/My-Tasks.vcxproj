@@ -23,6 +23,7 @@
     <ClInclude Include="DatabaseManager.h" />
     <ClInclude Include="LoginWindow.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="ManageUserWindow.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
@@ -32,6 +33,7 @@
     <ClCompile Include="DatabaseManager.cpp" />
     <ClCompile Include="LoginWindow.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="ManageUserWindow.cpp" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>

@@ -11,6 +11,9 @@ public:
     bool RegisterUser(const std::string& login, const std::string& password);
     bool ValidateUser(const std::string& login, const std::string& password);
 
+    bool UpdatePassword(const std::string& login, const std::string& newPassword);
+    bool DeleteUser(const std::string& login);
+
     void AddTask(const std::string& login, const std::string& name, const std::string& description);
     void DeleteTask(const std::string& login, int index);
     void MarkTaskDone(const std::string& login, int index);
