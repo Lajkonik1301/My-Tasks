@@ -3,46 +3,51 @@
 #include "MainWindow.h"
 
 AddTaskWindow::AddTaskWindow(MainWindow* parent, const std::string& user)
-    : wxFrame(nullptr, wxID_ANY, "Dodaj zadanie", wxDefaultPosition, wxSize(300, 200)),
+    : wxFrame(nullptr, wxID_ANY, "", wxDefaultPosition, wxDefaultSize),
     parentWindow(parent), currentUser(user)
 {
-    wxPanel* panel = new wxPanel(this);
-
-    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-
-    nameCtrl = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxSize(250, -1));
-    descCtrl = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxSize(250, -1));
-
-    wxButton* submitBtn = new wxButton(panel, wxID_ANY, "Dodaj");
-
-    sizer->Add(new wxStaticText(panel, wxID_ANY, "Nazwa:"), 0, wxALL, 5);
-    sizer->Add(nameCtrl, 0, wxALL, 5);
-    sizer->Add(new wxStaticText(panel, wxID_ANY, "Opis:"), 0, wxALL, 5);
-    sizer->Add(descCtrl, 0, wxALL, 5);
-    sizer->Add(submitBtn, 0, wxALL | wxALIGN_CENTER, 10);
-
-    panel->SetSizer(sizer);
-
-    submitBtn->Bind(wxEVT_BUTTON, &AddTaskWindow::OnSubmit, this);
+    CreateLayout("Dodaj zadanie", "", "", "Dodaj");
 }
 
-AddTaskWindow::AddTaskWindow(MainWindow* parent, const std::string& user, int taskIndex, const std::string& name, const std::string& description) : wxFrame(nullptr, wxID_ANY, "Edytuj zadanie", wxDefaultPosition, wxSize(300, 200)),
+
+AddTaskWindow::AddTaskWindow(MainWindow* parent, const std::string& user, int taskIndex, const std::string& name, const std::string& description)
+    : wxFrame(nullptr, wxID_ANY, "", wxDefaultPosition, wxDefaultSize),
     parentWindow(parent), currentUser(user), isEditMode(true), editingIndex(taskIndex)
 {
+    CreateLayout("Edytuj zadanie", name, description, "Zapisz");
+}
+
+void AddTaskWindow::CreateLayout(const std::string& title, const std::string& initialName, const std::string& initialDesc, const wxString& buttonText) {
+    SetTitle(title);
+    SetSize(wxSize(360, 300));
     wxPanel* panel = new wxPanel(this);
-    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
-    nameCtrl = new wxTextCtrl(panel, wxID_ANY, name, wxDefaultPosition, wxSize(250, -1));
-    descCtrl = new wxTextCtrl(panel, wxID_ANY, description, wxDefaultPosition, wxSize(250, -1));
-    wxButton* submitBtn = new wxButton(panel, wxID_ANY, "Zapisz");
+    // Sizer g³ówny i formularz
+    wxBoxSizer* outerSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* formSizer = new wxBoxSizer(wxVERTICAL);
 
-    sizer->Add(new wxStaticText(panel, wxID_ANY, "Nazwa:"), 0, wxALL, 5);
-    sizer->Add(nameCtrl, 0, wxALL, 5);
-    sizer->Add(new wxStaticText(panel, wxID_ANY, "Opis:"), 0, wxALL, 5);
-    sizer->Add(descCtrl, 0, wxALL, 5);
-    sizer->Add(submitBtn, 0, wxALL | wxALIGN_CENTER, 10);
+    // Pola i przycisk
+    nameCtrl = new wxTextCtrl(panel, wxID_ANY, initialName, wxDefaultPosition, wxSize(240, -1));
+    descCtrl = new wxTextCtrl(panel, wxID_ANY, initialDesc, wxDefaultPosition, wxSize(240, 80), wxTE_MULTILINE | wxTE_WORDWRAP);
+    wxButton* submitBtn = new wxButton(panel, wxID_ANY, buttonText);
 
-    panel->SetSizer(sizer);
+    // Nazwa
+    formSizer->AddSpacer(10);
+    formSizer->Add(new wxStaticText(panel, wxID_ANY, "Nazwa"), 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 4);
+    formSizer->Add(nameCtrl, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 8);
+
+    // Opis
+    formSizer->Add(new wxStaticText(panel, wxID_ANY, "Opis"), 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 4);
+    formSizer->Add(descCtrl, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 6);
+
+    // Przycisk
+    formSizer->Add(submitBtn, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 4);
+
+    // Umieszczenie formularza u góry i lekkie dociœniêcie do do³u
+    outerSizer->Add(formSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP | wxLEFT | wxRIGHT, 15);
+    outerSizer->AddStretchSpacer(1); // dolna czêœæ — oddech, ale bez nadmiaru
+
+    panel->SetSizer(outerSizer);
     submitBtn->Bind(wxEVT_BUTTON, &AddTaskWindow::OnSubmit, this);
 }
 

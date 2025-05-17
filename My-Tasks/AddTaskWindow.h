@@ -20,4 +20,6 @@ private:
     wxTextCtrl* descCtrl;
 
     void OnSubmit(wxCommandEvent& event);
+
+    void CreateLayout(const std::string& title, const std::string& initialName, const std::string& initialDesc, const wxString& buttonText);
 };

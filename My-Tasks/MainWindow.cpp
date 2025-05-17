@@ -24,7 +24,7 @@ EVT_CHOICE(ID_FILTER, MainWindow::OnFilterChanged)
 EVT_LISTBOX_DCLICK(wxID_ANY, MainWindow::OnTaskSelected)
 wxEND_EVENT_TABLE()
 
-MainWindow::MainWindow(const std::string& user) : wxFrame(nullptr, wxID_ANY, "Zadania", wxDefaultPosition, wxSize(800, 500)), currentUser(user)
+MainWindow::MainWindow(const std::string& user) : wxFrame(nullptr, wxID_ANY, "My-Tasks", wxDefaultPosition, wxSize(800, 500)), currentUser(user)
 {
     wxPanel* panel = new wxPanel(this);
     wxBoxSizer* rootSizer = new wxBoxSizer(wxHORIZONTAL);
