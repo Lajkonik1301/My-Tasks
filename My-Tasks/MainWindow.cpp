@@ -131,7 +131,8 @@ void MainWindow::OnMarkDone(wxCommandEvent&) {
     for (int i = 0; i < (int)allTasks.size(); ++i) {
         if ((int)allTasks[i].isDone() == filter) {
             if (filteredIndex == sel) {
-                DatabaseManager::GetInstance().MarkTaskDone(currentUser, i);
+                int newStatus = (filter == 0) ? 1 : 0;
+                DatabaseManager::GetInstance().UpdateTaskStatus(currentUser, i, newStatus);
                 break;
             }
             filteredIndex++;
@@ -142,7 +143,6 @@ void MainWindow::OnMarkDone(wxCommandEvent&) {
     taskDescription->SetLabel("Opis:");
     RefreshTasks();
 }
-
 
 void MainWindow::OnModify(wxCommandEvent&) {
     wxMessageBox("Opcja modyfikacji nie została jeszcze zaimplementowana.", "Informacja");
@@ -159,8 +159,16 @@ void MainWindow::OnManage(wxCommandEvent&) {
 }
 
 void MainWindow::OnFilterChanged(wxCommandEvent&) {
+    int filter = statusFilter->GetSelection();
+    if (filter == 0) {
+        markDoneButton->SetLabel("Oznacz jako wykonane");
+    }
+    else {
+        markDoneButton->SetLabel("Oznacz jako niewykonane");
+    }
     RefreshTasks();
 }
+
 
 void MainWindow::OnTaskSelected(wxCommandEvent&) {
     int sel = taskList->GetSelection();
