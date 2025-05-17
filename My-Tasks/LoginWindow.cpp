@@ -1,122 +1,71 @@
-#include "LoginWindow.h"
+ï»¿#include "LoginWindow.h"
+#include "MainWindow.h"
+#include "DatabaseManager.h"
 
-LoginWindow::LoginWindow(MainFrame* mainFrame, DatabaseManager* databaseManager){
-	this->mainFrame = mainFrame;
-	this->databaseManager = databaseManager;
+enum {
+    ID_LOGIN = 1,
+    ID_REGISTER
+};
 
-	wxFont headlianeFont(wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
+wxBEGIN_EVENT_TABLE(LoginWindow, wxFrame)
+EVT_BUTTON(ID_LOGIN, LoginWindow::OnLogin)
+EVT_BUTTON(ID_REGISTER, LoginWindow::OnRegister)
+wxEND_EVENT_TABLE()
 
-	//place items
-	panel = new wxPanel(mainFrame);
+LoginWindow::LoginWindow()
+    : wxFrame(nullptr, wxID_ANY, "My Tasks", wxDefaultPosition, wxSize(300, 300)) {
+    wxPanel* panel = new wxPanel(this);
 
-	loginHeadlineText = new wxStaticText(panel, wxID_ANY, "My Tasks");
-	loginHeadlineText->SetFont(headlianeFont);
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(new wxStaticText(panel, wxID_ANY, "Login:"), 0, wxALL, 5);
+    loginCtrl = new wxTextCtrl(panel, wxID_ANY);
+    sizer->Add(loginCtrl, 0, wxALL | wxEXPAND, 5);
+    sizer->Add(new wxStaticText(panel, wxID_ANY, "HasÅ‚o:"), 0, wxALL, 5);
+    passCtrl = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
+    sizer->Add(passCtrl, 0, wxALL | wxEXPAND, 5);
 
-	usernameText = new wxStaticText(panel, wxID_ANY, "Login:");
-	username = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(150, -1));
+    sizer->Add(new wxButton(panel, ID_LOGIN, "Zaloguj siÄ™"), 0, wxALL | wxEXPAND, 5);
+    sizer->Add(new wxButton(panel, ID_REGISTER, "Zarejestruj siÄ™"), 0, wxALL | wxEXPAND, 5);
 
-	passwordText = new wxStaticText(panel, wxID_ANY, "Has³o:");
-	password = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(150, -1), wxTE_PASSWORD);
-
-	loginButton = new wxButton(panel, wxID_ANY, "Zaloguj siê", wxDefaultPosition, wxSize(150, -1));
-	registerButton = new wxButton(panel, wxID_ANY, "Zarejestruj siê", wxDefaultPosition, wxSize(150, -1));
-
-	username->SetFocus();
-	//place items
-
-
-	//setup sizers
-	mainSizer = new wxBoxSizer(wxVERTICAL);
-	mainSizer->Add(loginHeadlineText, wxSizerFlags().CenterHorizontal());
-
-	mainSizer->AddSpacer(15);
-
-	usernameSizer = new wxBoxSizer(wxVERTICAL);
-	usernameSizer->Add(usernameText, wxSizerFlags().Align(wxALIGN_LEFT));
-	usernameSizer->AddSpacer(4);
-	usernameSizer->Add(username, wxSizerFlags().CenterHorizontal());
-	mainSizer->Add(usernameSizer, wxSizerFlags().CenterHorizontal());
-
-	mainSizer->AddSpacer(15);
-
-	passwordSizer = new wxBoxSizer(wxVERTICAL);
-	passwordSizer->Add(passwordText, wxSizerFlags().Align(wxALIGN_LEFT));
-	passwordSizer->AddSpacer(4);
-	passwordSizer->Add(password, wxSizerFlags().CenterHorizontal());
-	mainSizer->Add(passwordSizer, wxSizerFlags().CenterHorizontal());
-
-	mainSizer->AddSpacer(15);
-
-	mainSizer->Add(loginButton, wxSizerFlags().CenterHorizontal());
-	mainSizer->AddSpacer(5);
-	mainSizer->Add(registerButton, wxSizerFlags().CenterHorizontal());
-
-	outerSizer = new wxGridSizer(1);
-	outerSizer->Add(mainSizer, wxSizerFlags().Border(wxALL, 25).Expand());
-
-	panel->SetSizer(outerSizer);
-	outerSizer->SetSizeHints(mainFrame);
-	//setup sizers
-
-	//binding buttons
-	loginButton->Bind(wxEVT_BUTTON, &LoginWindow::OnLoginButtonClicked, this);
-	registerButton->Bind(wxEVT_BUTTON, &LoginWindow::OnRegisterButtonClicked, this);
-	//binding buttons
-
-	//window min-size setup
-	wxSize size = mainFrame->GetSize();
-	int minWidth = size.GetWidth() + size.GetWidth() * 0.25;
-	int minHeight = size.GetHeight() + size.GetHeight() * 0.25;
-
-	mainFrame->SetMinSize(wxSize(minWidth, minHeight));
+    panel->SetSizer(sizer);
+    Centre();
 }
 
-void LoginWindow::ClearLoginPageInputs(){
-	username->Clear();
-	password->Clear();
+void LoginWindow::ShowError(const wxString& message, const wxString& title) {
+    wxMessageBox(message, title, wxICON_ERROR);
 }
 
-void LoginWindow::OnLoginButtonClicked(wxCommandEvent& evt){
-	wxString usrName = username->GetValue();
-	wxString pwd = password->GetValue();
-
-	user = databaseManager->loginUser(usrName.ToStdString(), pwd.ToStdString());
-	if (user == nullptr) {
-		wxMessageBox("B³êdna nazwa u¿ytkownika lub has³o.", "B³¹d logowania", wxOK | wxICON_ERROR);
-		ClearLoginPageInputs();
-		return;
-	}
-	mainFrame->ContinueAfterLogin(user);
+void LoginWindow::ShowInfo(const wxString& message, const wxString& title) {
+    wxMessageBox(message, title, wxICON_INFORMATION);
 }
 
-void LoginWindow::OnRegisterButtonClicked(wxCommandEvent& evt){
-	wxString usrName = username->GetValue();
-	wxString pwd = password->GetValue();
+void LoginWindow::OnLogin(wxCommandEvent&) {
+    std::string login = loginCtrl->GetValue().ToStdString();
+    std::string pass = passCtrl->GetValue().ToStdString();
 
-	RegistrationStatus status = databaseManager->registerUser(usrName.ToStdString(), pwd.ToStdString());
-
-	RegistrationStatusLog(status);
+    if (DatabaseManager::GetInstance().ValidateUser(login, pass)) {
+        MainWindow* main = new MainWindow(login);
+        main->Show();
+        Close();
+    }
+    else {
+        ShowError("BÅ‚Ä™dna nazwa uÅ¼ytkownika lub hasÅ‚o.", "BÅ‚Ä…d logowania");
+    }
 }
 
-void LoginWindow::RegistrationStatusLog(RegistrationStatus status){
-	switch (status)
-	{
-	case RegistrationStatus::Success:
-		wxMessageBox("Zarejestrowano!", "Udana rejestracja", wxOK | wxICON_INFORMATION);
-		break;
-	case RegistrationStatus::UsernameAlreadyExists:
-		wxMessageBox("U¿ytkownik o podanym loginie istnieje!", "B³¹d rejestracji", wxOK | wxICON_ERROR);
-		ClearLoginPageInputs();
-		break;
-	case RegistrationStatus::EmptyUsernameOrPassword:
-		wxMessageBox("Login lub ha³o nie mo¿e byæ puste!", "B³¹d rejestracji", wxOK | wxICON_ERROR);
-		ClearLoginPageInputs();
-		break;
-	case RegistrationStatus::DatabaseError:
-		wxMessageBox("B³¹d bazy danych!", "B³¹d rejestracji", wxOK | wxICON_ERROR);
-		ClearLoginPageInputs();
-		break;
-	default:
-		break;
-	}
+void LoginWindow::OnRegister(wxCommandEvent&) {
+    std::string login = loginCtrl->GetValue().ToStdString();
+    std::string pass = passCtrl->GetValue().ToStdString();
+
+    if (login.empty() || pass.empty()) {
+        ShowError("Login lub hasÅ‚o nie moÅ¼e byÄ‡ puste!", "BÅ‚Ä…d rejestracji");
+        return;
+    }
+
+    if (DatabaseManager::GetInstance().RegisterUser(login, pass)) {
+        ShowInfo("Zarejestrowano!", "Udana rejestracja");
+    }
+    else {
+        ShowError("UÅ¼ytkownik o podanym loginie istnieje!", "BÅ‚Ä…d rejestracji");
+    }
 }

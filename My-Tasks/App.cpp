@@ -1,12 +1,13 @@
-#include "App.h"
+#include <wx/wx.h>
+#include "LoginWindow.h"
 
-wxIMPLEMENT_APP(App);
+class TaskApp : public wxApp {
+public:
+    virtual bool OnInit() override {
+        LoginWindow* login = new LoginWindow();
+        login->Show();
+        return true;
+    }
+};
 
-bool App::OnInit() {
-	MainFrame* mainFrame = new MainFrame("My Tasks");
-	//mainFrame->SetClientSize(800, 600);
-	mainFrame->Center();
-	mainFrame->Show();
-
-	return true;
-}
+wxIMPLEMENT_APP(TaskApp);

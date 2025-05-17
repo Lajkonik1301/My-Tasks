@@ -1,16 +1,16 @@
 #include "User.h"
 
-User::User(int id, const std::string& username, const std::string& passwordHash)
-    : id(id), username(username), passwordHash(passwordHash) {}
+User::User(int id, const std::string& login, const std::string& password)
+    : id(id), login(login), password(password) {}
 
 int User::getId() const {
     return id;
 }
 
-std::string User::getUsername() const {
-    return username;
+const std::string& User::getLogin() const {
+    return login;
 }
 
-std::string User::getPasswordHash() const {
-    return passwordHash;
+const std::string& User::getPassword() const {
+    return password;
 }

@@ -18,6 +18,21 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DatabaseManager.h" />
+    <ClInclude Include="LoginWindow.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="Task.h" />
+    <ClInclude Include="User.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="DatabaseManager.cpp" />
+    <ClCompile Include="LoginWindow.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="Task.cpp" />
+    <ClCompile Include="User.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -160,22 +175,6 @@
       <EnableDpiAwareness>true</EnableDpiAwareness>
     </Manifest>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="App.h" />
-    <ClInclude Include="DatabaseManager.h" />
-    <ClInclude Include="LoginWindow.h" />
-    <ClInclude Include="MainAppWindow.h" />
-    <ClInclude Include="MainFrame.h" />
-    <ClInclude Include="User.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App.cpp" />
-    <ClCompile Include="DatabaseManager.cpp" />
-    <ClCompile Include="LoginWindow.cpp" />
-    <ClCompile Include="MainAppWindow.cpp" />
-    <ClCompile Include="MainFrame.cpp" />
-    <ClCompile Include="User.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

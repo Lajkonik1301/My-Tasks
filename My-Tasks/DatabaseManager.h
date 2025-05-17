@@ -1,49 +1,24 @@
 #pragma once
-
-#include "User.h"
 #include <string>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
 #include <vector>
-#include <sqlite3.h>
+#include "Task.h"
+#include "User.h"
 
-enum class RegistrationStatus {
-    Success,
-    UsernameAlreadyExists,
-    EmptyUsernameOrPassword,
-    DatabaseError
-};
-
-class DatabaseManager{
+class DatabaseManager {
 public:
-    DatabaseManager();
-    ~DatabaseManager();
+    static DatabaseManager& GetInstance();
+
+    bool RegisterUser(const std::string& login, const std::string& password);
+    bool ValidateUser(const std::string& login, const std::string& password);
+
+    void AddTask(const std::string& login, const std::string& name, const std::string& description);
+    void DeleteTask(const std::string& login, int index);
+    void MarkTaskDone(const std::string& login, int index);
+    std::vector<Task> GetTasks(const std::string& login);
 
 private:
-    sqlite3* db;
+    DatabaseManager();
+    void Init();
 
-    bool openDatabase();
-    void closeDatabase();
-
-    void createUsersTable();
-    void createTaskTable();
-    void createCategoriesTable();
-
-    std::string hashPassword(const std::string& password);
-
-    void createDefaultCat(int userId);
-
-public:
-    RegistrationStatus registerUser(const std::string& username, const std::string& password);
-    User* loginUser(const std::string& username, const std::string& password);
-    
-    void getCategories(std::vector<std::string>& categories, int userId);
-    void getTasks(std::vector<std::string>& tasks, int userId);
-
-    std::string addNewTask(int userId, int categoryId, std::string name, std::string description, int priority);
-    bool modifyTask();
-    bool markAsDone(int taskId);
-    void deleteTask(std::string taskName);
+    std::string dbPath;
 };
-

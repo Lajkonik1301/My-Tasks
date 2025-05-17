@@ -1,37 +1,20 @@
 #pragma once
 #include <wx/wx.h>
-#include "MainFrame.h"
-#include "DatabaseManager.h"
-#include "User.h"
+#include <string>
 
-class MainFrame;
-
-class LoginWindow : public wxPanel {
+class LoginWindow : public wxFrame {
 public:
-	LoginWindow(MainFrame* mainFrame, DatabaseManager* databaseManager);
+    LoginWindow();
+
 private:
-	MainFrame* mainFrame;
-	DatabaseManager* databaseManager;
-	User* user;
+    wxTextCtrl* loginCtrl;
+    wxTextCtrl* passCtrl;
 
-	wxPanel* panel;
-	wxStaticText* loginHeadlineText;
-	wxStaticText* usernameText;
-	wxStaticText* passwordText;
-	wxTextCtrl* username;
-	wxTextCtrl* password;
-	wxButton* loginButton;
-	wxButton* registerButton;
+    void OnLogin(wxCommandEvent& event);
+    void OnRegister(wxCommandEvent& event);
 
-	wxBoxSizer* mainSizer;
-	wxBoxSizer* usernameSizer;
-	wxBoxSizer* passwordSizer;
-	wxGridSizer* outerSizer;
+    void ShowError(const wxString& message, const wxString& title);
+    void ShowInfo(const wxString& message, const wxString& title);
 
-	void ClearLoginPageInputs();
-
-	void OnLoginButtonClicked(wxCommandEvent& evt);
-	void OnRegisterButtonClicked(wxCommandEvent& evt);
-	void RegistrationStatusLog(RegistrationStatus status);
+    wxDECLARE_EVENT_TABLE();
 };
-
