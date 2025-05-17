@@ -122,11 +122,27 @@ void MainWindow::OnDelete(wxCommandEvent&) {
 
 void MainWindow::OnMarkDone(wxCommandEvent&) {
     int sel = taskList->GetSelection();
-    if (sel != wxNOT_FOUND) {
-        DatabaseManager::GetInstance().MarkTaskDone(currentUser, sel);
-        RefreshTasks();
+    if (sel == wxNOT_FOUND) return;
+
+    auto allTasks = DatabaseManager::GetInstance().GetTasks(currentUser);
+    int filter = statusFilter->GetSelection(); // 0: niewykonane, 1: wykonane
+
+    int filteredIndex = 0;
+    for (int i = 0; i < (int)allTasks.size(); ++i) {
+        if ((int)allTasks[i].isDone() == filter) {
+            if (filteredIndex == sel) {
+                DatabaseManager::GetInstance().MarkTaskDone(currentUser, i);
+                break;
+            }
+            filteredIndex++;
+        }
     }
+
+    taskName->SetLabel("Nazwa:");
+    taskDescription->SetLabel("Opis:");
+    RefreshTasks();
 }
+
 
 void MainWindow::OnModify(wxCommandEvent&) {
     wxMessageBox("Opcja modyfikacji nie została jeszcze zaimplementowana.", "Informacja");
