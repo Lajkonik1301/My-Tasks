@@ -5,7 +5,6 @@
 class LoginWindow : public wxFrame {
 public:
     LoginWindow();
-
 private:
     wxTextCtrl* loginCtrl;
     wxTextCtrl* passCtrl;

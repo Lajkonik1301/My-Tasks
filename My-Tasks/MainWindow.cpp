@@ -30,7 +30,7 @@ MainWindow::MainWindow(const std::string& user) : wxFrame(nullptr, wxID_ANY, "My
     wxPanel* panel = new wxPanel(this);
     wxBoxSizer* rootSizer = new wxBoxSizer(wxHORIZONTAL);
 
-    // === Lewa kolumna ===
+    // lewa kolumna
     wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
     const wxSize buttonSize(160, -1);
 
@@ -49,10 +49,10 @@ MainWindow::MainWindow(const std::string& user) : wxFrame(nullptr, wxID_ANY, "My
     leftSizer->Add(deleteButton, 0, wxALL, 5);
     leftSizer->Add(statusFilter, 0, wxALL, 5);
 
-    // === Prawa kolumna ===
+    // prawa kolumna
     wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
 
-    // Górny wiersz
+    // górny wiersz
     wxBoxSizer* topRow = new wxBoxSizer(wxHORIZONTAL);
     userLabel = new wxStaticText(panel, wxID_ANY, "Zalogowany użytkownik:");
     usernameText = new wxStaticText(panel, wxID_ANY, user);
@@ -66,7 +66,7 @@ MainWindow::MainWindow(const std::string& user) : wxFrame(nullptr, wxID_ANY, "My
 
     rightSizer->Add(topRow, 0, wxALL | wxEXPAND, 10);
 
-    // Dolny wiersz
+    // dolny wiersz
     wxBoxSizer* bottomRow = new wxBoxSizer(wxHORIZONTAL);
 
     taskList = new wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(260, 200));
@@ -82,11 +82,11 @@ MainWindow::MainWindow(const std::string& user) : wxFrame(nullptr, wxID_ANY, "My
 
     rightSizer->Add(bottomRow, 1, wxEXPAND);
 
-    // Połącz kolumny
+    // łączenie kolumn
     rootSizer->Add(leftSizer, 0, wxALL | wxEXPAND, 10);
     rootSizer->Add(rightSizer, 1, wxEXPAND);
 
-    // Dodaj zewnętrzny margines
+    // margines zewnętrzny
     wxGridSizer* outerSizer = new wxGridSizer(1);
     outerSizer->Add(rootSizer, wxSizerFlags().Border(wxALL, 15).Expand());
 

@@ -22,30 +22,24 @@ void AddTaskWindow::CreateLayout(const std::string& title, const std::string& in
     SetSize(wxSize(360, 300));
     wxPanel* panel = new wxPanel(this);
 
-    // Sizer g³ówny i formularz
     wxBoxSizer* outerSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* formSizer = new wxBoxSizer(wxVERTICAL);
 
-    // Pola i przycisk
     nameCtrl = new wxTextCtrl(panel, wxID_ANY, initialName, wxDefaultPosition, wxSize(240, -1));
     descCtrl = new wxTextCtrl(panel, wxID_ANY, initialDesc, wxDefaultPosition, wxSize(240, 80), wxTE_MULTILINE | wxTE_WORDWRAP);
     wxButton* submitBtn = new wxButton(panel, wxID_ANY, buttonText);
 
-    // Nazwa
     formSizer->AddSpacer(10);
     formSizer->Add(new wxStaticText(panel, wxID_ANY, "Nazwa"), 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 4);
     formSizer->Add(nameCtrl, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 8);
 
-    // Opis
     formSizer->Add(new wxStaticText(panel, wxID_ANY, "Opis"), 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 4);
     formSizer->Add(descCtrl, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 6);
 
-    // Przycisk
     formSizer->Add(submitBtn, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 4);
 
-    // Umieszczenie formularza u góry i lekkie dociœniêcie do do³u
     outerSizer->Add(formSizer, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP | wxLEFT | wxRIGHT, 15);
-    outerSizer->AddStretchSpacer(1); // dolna czêœæ — oddech, ale bez nadmiaru
+    outerSizer->AddStretchSpacer(1);
 
     panel->SetSizer(outerSizer);
     submitBtn->Bind(wxEVT_BUTTON, &AddTaskWindow::OnSubmit, this);
